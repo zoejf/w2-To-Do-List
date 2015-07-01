@@ -1,19 +1,22 @@
 $(function() { 
 
 	var $newItemForm = $("#new_task_item");
-	var $toDoList = $("#to_do_list");
 
 	//to do template -- this is a function
 	var toDoTemplate = _.template($('#todo-template').html());
 
+	//element to hold our list of to dos
 	var $toDoUl = $("#todo-list");
 
+	//tasks is a model of our "seed"/test data
 	var tasks = [
 	  {title: "Sprinkles", description: "cat", date: "2015-07-01"},
 	  {title: "Bagel", description: "dog", date: "2015-07-02"},
 	  {title: "Fluffy", description: "dinosaur", date: "2015-07-03"}
 	];
 
+	//append existing seed data to the HTML
+	//_.each is an iterator function provided by Underscore.js
 	_.each(tasks, function (task, index) {
 	  var $task = $(toDoTemplate(task));
 	  $task.attr('data-index', index);
@@ -21,32 +24,26 @@ $(function() {
 	});
 
 
-//listens for click on the "add to list" button
+//listens for click on the "add to list" button to create new task
 	$newItemForm.on("submit", function(event) {
 		event.preventDefault();
+
+		//create new todo object from form data
+		var toDoName = $('#item_name').val();
+	    var toDoDesc = $('#item_desc').val();
+	    var toDoDate = $('#due_date').val();
+	    var toDoData = {title: toDoName, description: toDoDesc, date: toDoDate};
+
 		
-		// if ( ($('#item_name').text() !== $('#item_name').val()) || ($('#item_desc').text() !== $('#item_desc').val()) || ($('due_date').text() !== $('#due_date').val()) ) {
-		// 	$(".alert.alert-danger").removeClass("display");
-		// } else { 
+		//store our new toDoData
+		tasks.push(toDoData);
+		console.log(tasks);
+		var index = tasks.indexOf(toDoData);
 
-		console.log('form submitted');
-		console.log($('#item_name').val() );  //shopping list name input
-		console.log($('#item_desc').val() ); // shopping list description input
-		console.log($('#due_date').val() ); // shopping list due date
-
-		//creates a new variable to store the newly submitted item
-		var newTasks = [];
-
-		//adds the submitted item to an array of new items
-		newTasks.push({title: $('#item_name').val(), description: $('#item_desc').val(), date: $('#due_date').val() });
-
-		//print the new tasks to the html
-		_.each(newTasks, function (task, index) {
-		  var $task = $(toDoTemplate(task));
-		  $task.attr('data-index', index);
-		  $toDoUl.append($task);
-		});
-
+		// append our new todo to the page
+	    var $task = $(toDoTemplate(toDoData));
+	    $task.attr('data-index', index);
+	    $toDoUl.append($task);
 
 		// this allows strikeout (or "done" class) for the new items
 		$listItems = $("#todo-list .to_do");
@@ -55,7 +52,6 @@ $(function() {
 			$(this).addClass("done");
 			})
 
-
 		console.log("item title: " + $("#item_name").val() + " description: " + $("#item_desc").val() + " date: " + $('#due_date').val() );
 		console.log(tasks);
 		
@@ -63,14 +59,10 @@ $(function() {
 	});
 
 
+// $toDoUl.on('click', '.to_do-text', function() {
+//   $(this).toggleClass('done');
+// });
 
-// this allows strikeout for the hardcoded items
-	var $listItems = $("#todo-list .to_do");
-
-		$listItems.click(function (event) {
-			event.preventDefault();
-			$(this).addClass("done");
-			})
 
 });
 
