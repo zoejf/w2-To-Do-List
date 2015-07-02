@@ -2,26 +2,59 @@ $(function() {
 
 	var $newItemForm = $("#new_task_item");
 
-	//to do template -- this is a function
+	//underscore function to run to do template 
 	var toDoTemplate = _.template($('#todo-template').html());
 
 	//element to hold our list of to dos
 	var $toDoUl = $("#todo-list");
 
-	//tasks is a model of our "seed"/test data
-	var tasks = [
-	  {title: "Sprinkles", description: "cat", date: "2015-07-01"},
-	  {title: "Bagel", description: "dog", date: "2015-07-02"},
-	  {title: "Fluffy", description: "dinosaur", date: "2015-07-03"}
-	];
+	//constructor function for ToDo
+	function ToDo (title, description, date) {
+	  this.title = title;
+	  this.description = description;
+	  this.date = date;
+	};
 
-	//append existing seed data to the HTML
-	//_.each is an iterator function provided by Underscore.js
-	_.each(tasks, function (task, index) {
-	  var $task = $(toDoTemplate(task));
-	  $task.attr('data-index', index);
-	  $toDoUl.append($task);
-	});
+	//variable to hold all of the instances, using .all function
+	ToDo.all = []
+
+	//this is test data to be pre-loaded to the HTML
+	var task1 = new ToDo("clean", "room");
+
+	ToDo.prototype.save = function(){
+		ToDo.all.push(this);
+		console.log(this);
+
+	};
+
+	task1.save();
+	
+
+	ToDo.prototype.render = function(){
+		_.each(ToDo.all, function (task, index) {
+		  var $task = $(toDoTemplate(task));
+		  $task.attr('data-index', index);
+		  $toDoUl.append($task);
+		  console.log("render works")
+		});
+	}
+
+	task1.render();
+
+
+
+
+
+	//tasks is a model of our "seed"/test data
+	// var tasks = [
+	//   {title: "Sprinkles", description: "cat", date: "2015-07-01"},
+	//   {title: "Bagel", description: "dog", date: "2015-07-02"},
+	//   {title: "Fluffy", description: "dinosaur", date: "2015-07-03"}
+	// ];
+
+	// append existing seed data to the HTML
+	// _.each is an iterator function provided by Underscore.js
+
 
 
 //listens for click on the "add to list" button to create new task
